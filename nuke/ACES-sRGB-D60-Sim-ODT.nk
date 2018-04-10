@@ -1,0 +1,2988 @@
+#! C:/Program Files/Nuke11.0v1/nuke-11.0.1.dll -nx
+version 11.0 v1
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="1904" h="1011" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1241" stretch="1"/>
+            <splitter orientation="2">
+                <split size="71"/>
+                <dock id="" activePageId="Viewer.3">
+                    <page id="Viewer.3"/>
+                    <page id="Viewer.1"/>
+                    <page id="Viewer.2"/>
+                </dock>
+                <split size="892"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                    <page id="DAG.2"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name C:/Users/user/Desktop/ODT-sRGBD60.nk
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement OCIO
+ OCIO_config custom
+ customOCIOConfigPath /Users/alex/Dropbox/OpenColorIO-Configs-master/aces_1.0.1/config.ocio
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT "ACES - ACEScg"
+ monitorLut ACES/sRGB
+ int8Lut "Utility - sRGB - Texture"
+ int16Lut "ACES - ACEScc"
+ logLut "Input - ADX - ADX10"
+ floatLut "ACES - ACEScg"
+}
+Group {
+ inputs 0
+ name ODT
+ tile_color 0x56ffff
+ label "<font size=1>Output Device Transform - sRGBD60"
+ note_font "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold"
+ note_font_color 0xffffffff
+ xpos 173
+ ypos -43
+ addUserKnob {20 User}
+ addUserKnob {26 notes l "" +STARTLINE T "Ezequiel Mastrasso\nezequielm@gmail.com\nwww.ezequielm.com\n\nInspired by Alex Frys P3D60 Nuke ODT\nhttp://www.alexfry.com/blog/2016/11/30/pure-nuke-aces-rrt-odt"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode4
+  tile_color 0x388e8e00
+  label "ODT -  sRGB D60"
+  note_font_size 100
+  xpos -320
+  ypos -345
+  bdwidth 2082
+  bdheight 2589
+  z_order -100
+ }
+ BackdropNode {
+  inputs 0
+  name ACES_lib_ODT_Commong____darkSurround_to_dimSurround
+  tile_color 0x6889ff
+  label darkSurround_to_dimSurround()
+  note_font_size 45
+  xpos 149
+  ypos 653
+  bdwidth 732
+  bdheight 803
+  z_order -2
+ }
+ BackdropNode {
+  inputs 0
+  name _code
+  label "float\[3] darkSurround_to_dimSurround( float linearCV\[3])\n\{\n  float XYZ\[3] = mult_f3_f44( linearCV, AP1_2_XYZ_MAT); \n\n  float xyY\[3] = XYZ_2_xyY(XYZ);\n  xyY\[2] = clamp( xyY\[2], 0., HALF_POS_INF);\n  xyY\[2] = pow( xyY\[2], DIM_SURROUND_GAMMA);\n  XYZ = xyY_2_XYZ(xyY);\n\n  return mult_f3_f44( XYZ, XYZ_2_AP1_MAT);\n\}"
+  xpos 495
+  ypos 727
+  bdwidth 372
+  bdheight 213
+  z_order -2
+ }
+ BackdropNode {
+  inputs 0
+  name ACES_lib_Utilies____XYZ_2_xyY
+  tile_color 0x3a8839ff
+  label XYZ_2_xyY()
+  note_font_size 45
+  xpos 901
+  ypos 817
+  bdwidth 839
+  bdheight 330
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name ACES_lib_Utilies____xyY_2_XYZ
+  tile_color 0xffb951ff
+  label xyY_2_XYZ()
+  note_font_size 45
+  xpos 902
+  ypos 1160
+  bdwidth 842
+  bdheight 296
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name const_float_ODT_SAT_MAT_3_3
+  tile_color 0xbf7348ff
+  label ODT_SAT_MAT_3_3()
+  note_font_size 45
+  xpos 148
+  ypos 1467
+  bdwidth 816
+  bdheight 691
+  z_order -1
+ }
+ BackdropNode {
+  inputs 0
+  name BackdropNode2
+  tile_color 0x8e388e00
+  label segmented_spline_c9_fwd
+  note_font_size 100
+  xpos -18
+  ypos -124
+  bdwidth 651
+  bdheight 579
+ }
+ BackdropNode {
+  inputs 0
+  name code
+  label "// Transformations between CIE XYZ tristimulus values and CIE x,y \n// chromaticity coordinates\nfloat\[3] XYZ_2_xyY( float XYZ\[3])\n\{  \n  float xyY\[3];\n  float divisor = (XYZ\[0] + XYZ\[1] + XYZ\[2]);\n  if (divisor == 0.) divisor = 1e-10;\n  xyY\[0] = XYZ\[0] / divisor;\n  xyY\[1] = XYZ\[1] / divisor;  \n  xyY\[2] = XYZ\[1];\n  \n  return xyY;\n\}"
+  note_font_size 13
+  xpos 1191
+  ypos 932
+  bdwidth 532
+  bdheight 201
+ }
+ BackdropNode {
+  inputs 0
+  name code1
+  label "float\[3] xyY_2_XYZ( input varying float xyY\[3])\n\{\n  float XYZ\[3];\n  XYZ\[0] = xyY\[0] * xyY\[2] / max( xyY\[1], 1e-10);\n  XYZ\[1] = xyY\[2];  \n  XYZ\[2] = (1.0 - xyY\[0] - xyY\[1]) * xyY\[2] / max( xyY\[1], 1e-10);\n\n  return XYZ;\n\}\n"
+  note_font_size 13
+  xpos 1227
+  ypos 1267
+  bdwidth 496
+  bdheight 177
+ }
+ BackdropNode {
+  inputs 0
+  name code2
+  label "// Saturation compensation factor\nconst float ODT_SAT_FACTOR = 0.93;\nconst float ODT_SAT_MAT\[3]\[3] =\ncalc_sat_adjust_matrix( ODT_SAT_FACTOR, AP1_RGB2Y);\n\nfloat\[3]\[3] calc_sat_adjust_matrix \n  ( input varying float sat,\n    input varying float rgb2Y\[3]\n  )\n\{\n  //\n  // This function determines the terms for a 3x3 saturation matrix that is\n  // based on the luminance of the input.\n  //\n  float M\[3]\[3];\n  M\[0]\[0] = (1.0 - sat) * rgb2Y\[0] + sat;\n  M\[1]\[0] = (1.0 - sat) * rgb2Y\[0];\n  M\[2]\[0] = (1.0 - sat) * rgb2Y\[0];\n  \n  M\[0]\[1] = (1.0 - sat) * rgb2Y\[1];\n  M\[1]\[1] = (1.0 - sat) * rgb2Y\[1] + sat;\n  M\[2]\[1] = (1.0 - sat) * rgb2Y\[1];\n  \n  M\[0]\[2] = (1.0 - sat) * rgb2Y\[2];\n  M\[1]\[2] = (1.0 - sat) * rgb2Y\[2];\n  M\[2]\[2] = (1.0 - sat) * rgb2Y\[2] + sat;\n\n  M = transpose_f33(M);    \n  return M;\n\} "
+  note_font_size 13
+  xpos 423
+  ypos 1613
+  bdwidth 517
+  bdheight 492
+ }
+ Input {
+  inputs 0
+  name OCES
+  xpos 268
+  ypos -511
+ }
+ Dot {
+  name Dot27
+  label OCES
+  note_font_size 160
+  note_font_color 0xff06c8ff
+  xpos 302
+  ypos -424
+ }
+ Dot {
+  name Dot43
+  label "ODT - sRGB-D60"
+  note_font_size 50
+  note_font_color 0xc18842ff
+  xpos 302
+  ypos -234
+ }
+set N2ae0b180 [stack 0]
+ ColorMatrix {
+  matrix {
+      {0.695452 0.140679 0.163869}
+      {0.0447946 0.859671 0.0955343}
+      {-0.00552588 0.00402521 1.0015}
+    }
+  invert true
+  name AP1_to_AP1
+  label "line 63\n  // OCES to RGB rendering space\n    float rgbPre\[3] = mult_f3_f44( oces, AP0_2_AP1_MAT);"
+  xpos 269
+  ypos -197
+ }
+ Dot {
+  name Dot44
+  xpos 303
+  ypos -17
+ }
+set N2ae0aa80 [stack 0]
+ Dot {
+  name Dot45
+  label B
+  note_font_size 50
+  note_font_color 0x594fffff
+  xpos 445
+  ypos 93
+ }
+ Shuffle {
+  red blue
+  green blue
+  name Shuffle38
+  xpos 411
+  ypos 137
+ }
+ Group {
+  name segmented_spline_c9_fwd2
+  tile_color 0x33ffb3ff
+  note_font "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold"
+  note_font_color 0xffffffff
+  xpos 411
+  ypos 163
+  addUserKnob {20 User}
+  addUserKnob {7 coefsLow0}
+  coefsLow0 -1.698970004
+  addUserKnob {7 coefsLow1}
+  coefsLow1 -1.698970004
+  addUserKnob {7 coefsLow2}
+  coefsLow2 -1.4779
+  addUserKnob {7 coefsLow3}
+  coefsLow3 -1.2291
+  addUserKnob {7 coefsLow4}
+  coefsLow4 -0.8648
+  addUserKnob {7 coefsLow5}
+  coefsLow5 -0.448
+  addUserKnob {7 coefsLow6}
+  coefsLow6 0.00518
+  addUserKnob {7 coefsLow7}
+  coefsLow7 0.4511080334
+  addUserKnob {7 coefsLow8}
+  coefsLow8 0.9113744414
+  addUserKnob {7 coefsLow9}
+  coefsLow9 0.9113744414
+  addUserKnob {26 ""}
+  addUserKnob {7 coefsHigh0}
+  coefsHigh0 0.5154386965
+  addUserKnob {7 coefsHigh1}
+  coefsHigh1 0.8470437783
+  addUserKnob {7 coefsHigh2}
+  coefsHigh2 1.1358
+  addUserKnob {7 coefsHigh3}
+  coefsHigh3 1.3802
+  addUserKnob {7 coefsHigh4}
+  coefsHigh4 1.5197
+  addUserKnob {7 coefsHigh5}
+  coefsHigh5 1.5985
+  addUserKnob {7 coefsHigh6}
+  coefsHigh6 1.6467
+  addUserKnob {7 coefsHigh7}
+  coefsHigh7 1.674609136
+  addUserKnob {7 coefsHigh8}
+  coefsHigh8 1.687873339
+  addUserKnob {7 coefsHigh9}
+  coefsHigh9 1.687873339
+  addUserKnob {26 ""}
+  addUserKnob {12 minPoint}
+  minPoint {0.0028799 0.02}
+  addUserKnob {12 midPoint}
+  midPoint {4.79999924 4.8}
+  addUserKnob {12 maxPoint}
+  maxPoint {1005.719116 48}
+  addUserKnob {7 slopeLow}
+  addUserKnob {7 slopeHigh}
+  slopeHigh 0.04
+  addUserKnob {26 ""}
+  addUserKnob {26 ""}
+  addUserKnob {7 N_KNOTS_LOW}
+  N_KNOTS_LOW 8
+  addUserKnob {7 N_KNOTS_HIGH}
+  N_KNOTS_HIGH 8
+ }
+  Input {
+   inputs 0
+   name float
+   xpos -349
+   ypos 278
+  }
+  Shuffle {
+   green red
+   blue red
+   name Shuffle48
+   xpos -349
+   ypos 324
+  }
+  Dot {
+   name Dot58
+   xpos -315
+   ypos 350
+  }
+set N2ae31880 [stack 0]
+  Dot {
+   name Dot59
+   xpos -671
+   ypos 388
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "logx <= log10(minPoint.x)"
+   expr1 "( logx > log10(minPoint.x) ) * ( logx < log10( midPoint.x) )"
+   expr2 "( logx >= log10(midPoint.x) ) && ( logx < log10(maxPoint.x) )"
+   expr3 "logx >= log10(maxPoint.x)"
+   name segmented_spline_c9_fwd7
+   xpos -705
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+set N2ae31180 [stack 0]
+  Shuffle {
+   red alpha
+   green alpha
+   blue alpha
+   name Shuffle49
+   label peak
+   xpos -585
+   ypos 621
+  }
+push $N2ae31880
+  Dot {
+   name Dot60
+   xpos 235
+   ypos 389
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 rgba
+   expr0 "logx * slopeHigh+ ( log10(maxPoint.y) - slopeHigh * log10(maxPoint) )"
+   expr1 "logx * \[value slopeHigh] + ( log10(\[value maxPoint.y]) - \[value slopeHigh] * log10(\[value maxPoint]) )"
+   name segmented_spline_c9_fwd9
+   xpos 201
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  Dot {
+   name Dot61
+   label logy
+   xpos 235
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle50
+   xpos 201
+   ypos 680
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply17
+   xpos -191
+   ypos 836
+  }
+push $N2ae31180
+  Shuffle {
+   red blue
+   green blue
+   alpha blue
+   name Shuffle51
+   label high
+   xpos -666
+   ypos 622
+  }
+push $N2ae31880
+  Dot {
+   name Dot62
+   xpos -68
+   ypos 389
+  }
+set N2ae62e00 [stack 0]
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_HIGH-1) * (logx-log10(midPoint.x))/(log10(maxPoint.x)-log10(midPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "j == 0 ? \[value coefsHigh0] : j == 1 ? \[value coefsHigh1] : j == 2 ? \[value coefsHigh2] :j == 3 ? \[value coefsHigh3] : j == 4 ? \[value coefsHigh4] : j == 5 ? \[value coefsHigh5] : j == 6 ? \[value coefsHigh6] : j == 7 ? \[value coefsHigh7] : j == 8 ? \[value coefsHigh8] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr1 "j == 0 ? \[value coefsHigh1] : j == 1 ? \[value coefsHigh2] : j == 2 ? \[value coefsHigh3] :j == 3 ? \[value coefsHigh4] : j == 4 ? \[value coefsHigh5] : j == 5 ? \[value coefsHigh6] : j == 6 ? \[value coefsHigh7] : j == 7 ? \[value coefsHigh8] : j == 8 ? \[value coefsHigh9] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr2 "j == 0 ? \[value coefsHigh2] : j == 1 ? \[value coefsHigh3] : j == 2 ? \[value coefsHigh4] :j == 3 ? \[value coefsHigh5] : j == 4 ? \[value coefsHigh6] : j == 5 ? \[value coefsHigh7] : j == 6 ? \[value coefsHigh8] : j == 7 ? \[value coefsHigh9] : j == 8 ? \[value coefsHigh9] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr3 log10(r)
+   name segmented_spline_c9_fwd5
+   label cf
+   xpos -102
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  ColorMatrix {
+   matrix {
+       {0.5 -1 0.5}
+       {-1 1 0}
+       {0.5 0.5 0}
+     }
+   name ColorMatrix11
+   label "mult_f3_f33( cf, M)"
+   xpos -102
+   ypos 485
+  }
+push $N2ae62e00
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_HIGH-1) * (logx-log10(midPoint.x))/(log10(maxPoint.x)-log10(midPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 t*t
+   expr1 t
+   expr2 1
+   name segmented_spline_c9_fwd8
+   label monomials
+   xpos 20
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  MergeExpression {
+   inputs 2
+   channel0 rgba
+   expr0 (Ar*Br)+(Ag*Bg)+(Ab*Bb)
+   name dot_f3_f10
+   label "logy = dot_f3_f3( monomials, mult_f3_f33( cf, M))"
+   xpos -102
+   ypos 571
+  }
+  Dot {
+   name Dot63
+   label logy
+   xpos -68
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle52
+   xpos -102
+   ypos 682
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply18
+   xpos -325
+   ypos 834
+  }
+push 0
+push $N2ae31180
+  Shuffle {
+   green red
+   blue red
+   alpha red
+   name Shuffle53
+   label bottom
+   xpos -830
+   ypos 622
+  }
+push $N2ae31880
+  Dot {
+   name Dot64
+   xpos -448
+   ypos 388
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 rgba
+   expr0 "logx * \[value slopeLow] + ( log10(\[value minPoint.y]) - \[value slopeLow] * log10(\[value minPoint.x]) )"
+   name segmented_spline_c9_fwd1
+   xpos -482
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  Dot {
+   name Dot65
+   label logy
+   xpos -448
+   ypos 657
+  }
+  Shuffle {
+   alpha white
+   name Shuffle54
+   xpos -482
+   ypos 675
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply19
+   xpos -563
+   ypos 838
+  }
+push $N2ae31180
+  Shuffle {
+   red green
+   blue green
+   alpha green
+   name Shuffle55
+   label low
+   xpos -746
+   ypos 619
+  }
+push $N2ae31880
+  Dot {
+   name Dot66
+   xpos -315
+   ypos 394
+  }
+set N2aeb8a80 [stack 0]
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_LOW-1) * (logx-log10(minPoint.x))/(log10(midPoint.x)-log10(minPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "j == 0 ? \[value coefsLow0] : j == 1 ? \[value coefsLow1] : j == 2 ? \[value coefsLow2] :j == 3 ? \[value coefsLow3] : j == 4 ? \[value coefsLow4] : j == 5 ? \[value coefsLow5] : j == 6 ? \[value coefsLow6] : j == 7 ? \[value coefsLow7] : j == 8 ? \[value coefsLow8] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr1 "j == 0 ? \[value coefsLow1] : j == 1 ? \[value coefsLow2] : j == 2 ? \[value coefsLow3] :j == 3 ? \[value coefsLow4] : j == 4 ? \[value coefsLow5] : j == 5 ? \[value coefsLow6] : j == 6 ? \[value coefsLow7] : j == 7 ? \[value coefsLow8] : j == 8 ? \[value coefsLow9] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr2 "j == 0 ? \[value coefsLow2] : j == 1 ? \[value coefsLow3] : j == 2 ? \[value coefsLow4] :j == 3 ? \[value coefsLow5] : j == 4 ? \[value coefsLow6] : j == 5 ? \[value coefsLow7] : j == 6 ? \[value coefsLow8] : j == 7 ? \[value coefsLow9] : j == 8 ? \[value coefsLow9] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr3 j
+   name segmented_spline_c9_fwd2
+   label cf
+   xpos -349
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  ColorMatrix {
+   matrix {
+       {0.5 -1 0.5}
+       {-1 1 0}
+       {0.5 0.5 0}
+     }
+   name ColorMatrix12
+   label "mult_f3_f33( cf, M)"
+   xpos -349
+   ypos 484
+  }
+push $N2aeb8a80
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_LOW-1) * (logx-log10(minPoint.x))/(log10(midPoint.x)-log10(minPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 t*t
+   expr1 t
+   expr2 1
+   name segmented_spline_c9_fwd3
+   label monomials
+   xpos -225
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  MergeExpression {
+   inputs 2
+   channel0 rgba
+   expr0 (Ar*Br)+(Ag*Bg)+(Ab*Bb)
+   name dot_f3_f11
+   label "logy = dot_f3_f3( monomials, mult_f3_f33( cf, M))"
+   xpos -349
+   ypos 571
+  }
+  Dot {
+   name Dot67
+   label logy
+   xpos -315
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle56
+   xpos -349
+   ypos 680
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply20
+   xpos -441
+   ypos 834
+  }
+  Merge2 {
+   inputs 4+1
+   operation plus
+   also_merge all
+   name Plus7
+   xpos -349
+   ypos 937
+  }
+  Expression {
+   channel0 rgba
+   expr0 pow(10,r)
+   name Expression8
+   xpos -349
+   ypos 999
+  }
+  Output {
+   name Output1
+   xpos -349
+   ypos 1099
+  }
+ end_group
+ Shuffle {
+  red black
+  green black
+  alpha black
+  name Shuffle70
+  xpos 411
+  ypos 187
+ }
+ Dot {
+  name Dot92
+  label B
+  note_font_size 50
+  note_font_color 0x594fffff
+  xpos 445
+  ypos 213
+ }
+push 0
+push $N2ae0aa80
+ Dot {
+  name Dot57
+  label R
+  note_font_size 50
+  note_font_color 0xff0000ff
+  xpos 151
+  ypos 105
+ }
+ Shuffle {
+  green red
+  blue red
+  name Shuffle1
+  xpos 117
+  ypos 123
+ }
+ Group {
+  name segmented_spline_c9_fwd
+  tile_color 0x33ffb3ff
+  note_font "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold"
+  note_font_color 0xffffffff
+  xpos 117
+  ypos 149
+  addUserKnob {20 User}
+  addUserKnob {7 coefsLow0}
+  coefsLow0 -1.698970004
+  addUserKnob {7 coefsLow1}
+  coefsLow1 -1.698970004
+  addUserKnob {7 coefsLow2}
+  coefsLow2 -1.4779
+  addUserKnob {7 coefsLow3}
+  coefsLow3 -1.2291
+  addUserKnob {7 coefsLow4}
+  coefsLow4 -0.8648
+  addUserKnob {7 coefsLow5}
+  coefsLow5 -0.448
+  addUserKnob {7 coefsLow6}
+  coefsLow6 0.00518
+  addUserKnob {7 coefsLow7}
+  coefsLow7 0.4511080334
+  addUserKnob {7 coefsLow8}
+  coefsLow8 0.9113744414
+  addUserKnob {7 coefsLow9}
+  coefsLow9 0.9113744414
+  addUserKnob {26 ""}
+  addUserKnob {7 coefsHigh0}
+  coefsHigh0 0.5154386965
+  addUserKnob {7 coefsHigh1}
+  coefsHigh1 0.8470437783
+  addUserKnob {7 coefsHigh2}
+  coefsHigh2 1.1358
+  addUserKnob {7 coefsHigh3}
+  coefsHigh3 1.3802
+  addUserKnob {7 coefsHigh4}
+  coefsHigh4 1.5197
+  addUserKnob {7 coefsHigh5}
+  coefsHigh5 1.5985
+  addUserKnob {7 coefsHigh6}
+  coefsHigh6 1.6467
+  addUserKnob {7 coefsHigh7}
+  coefsHigh7 1.674609136
+  addUserKnob {7 coefsHigh8}
+  coefsHigh8 1.687873339
+  addUserKnob {7 coefsHigh9}
+  coefsHigh9 1.687873339
+  addUserKnob {26 ""}
+  addUserKnob {12 minPoint}
+  minPoint {0.0028799 0.02}
+  addUserKnob {12 midPoint}
+  midPoint {4.79999924 4.8}
+  addUserKnob {12 maxPoint}
+  maxPoint {1005.719116 48}
+  addUserKnob {7 slopeLow}
+  addUserKnob {7 slopeHigh}
+  slopeHigh 0.04
+  addUserKnob {26 ""}
+  addUserKnob {26 ""}
+  addUserKnob {7 N_KNOTS_LOW}
+  N_KNOTS_LOW 8
+  addUserKnob {7 N_KNOTS_HIGH}
+  N_KNOTS_HIGH 8
+ }
+  Input {
+   inputs 0
+   name float
+   xpos -349
+   ypos 278
+  }
+  Shuffle {
+   green red
+   blue red
+   name Shuffle48
+   xpos -349
+   ypos 324
+  }
+  Dot {
+   name Dot58
+   xpos -315
+   ypos 350
+  }
+set N2af1e000 [stack 0]
+  Dot {
+   name Dot59
+   xpos -671
+   ypos 388
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "logx <= log10(minPoint.x)"
+   expr1 "( logx > log10(minPoint.x) ) * ( logx < log10( midPoint.x) )"
+   expr2 "( logx >= log10(midPoint.x) ) && ( logx < log10(maxPoint.x) )"
+   expr3 "logx >= log10(maxPoint.x)"
+   name segmented_spline_c9_fwd7
+   xpos -705
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+set N2ee13880 [stack 0]
+  Shuffle {
+   red alpha
+   green alpha
+   blue alpha
+   name Shuffle49
+   label peak
+   xpos -585
+   ypos 621
+  }
+push $N2af1e000
+  Dot {
+   name Dot60
+   xpos 235
+   ypos 389
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 rgba
+   expr0 "logx * slopeHigh+ ( log10(maxPoint.y) - slopeHigh * log10(maxPoint) )"
+   expr1 "logx * \[value slopeHigh] + ( log10(\[value maxPoint.y]) - \[value slopeHigh] * log10(\[value maxPoint]) )"
+   name segmented_spline_c9_fwd9
+   xpos 201
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  Dot {
+   name Dot61
+   label logy
+   xpos 235
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle50
+   xpos 201
+   ypos 680
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply17
+   xpos -191
+   ypos 836
+  }
+push $N2ee13880
+  Shuffle {
+   red blue
+   green blue
+   alpha blue
+   name Shuffle51
+   label high
+   xpos -666
+   ypos 622
+  }
+push $N2af1e000
+  Dot {
+   name Dot62
+   xpos -68
+   ypos 389
+  }
+set N2ee41500 [stack 0]
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_HIGH-1) * (logx-log10(midPoint.x))/(log10(maxPoint.x)-log10(midPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "j == 0 ? \[value coefsHigh0] : j == 1 ? \[value coefsHigh1] : j == 2 ? \[value coefsHigh2] :j == 3 ? \[value coefsHigh3] : j == 4 ? \[value coefsHigh4] : j == 5 ? \[value coefsHigh5] : j == 6 ? \[value coefsHigh6] : j == 7 ? \[value coefsHigh7] : j == 8 ? \[value coefsHigh8] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr1 "j == 0 ? \[value coefsHigh1] : j == 1 ? \[value coefsHigh2] : j == 2 ? \[value coefsHigh3] :j == 3 ? \[value coefsHigh4] : j == 4 ? \[value coefsHigh5] : j == 5 ? \[value coefsHigh6] : j == 6 ? \[value coefsHigh7] : j == 7 ? \[value coefsHigh8] : j == 8 ? \[value coefsHigh9] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr2 "j == 0 ? \[value coefsHigh2] : j == 1 ? \[value coefsHigh3] : j == 2 ? \[value coefsHigh4] :j == 3 ? \[value coefsHigh5] : j == 4 ? \[value coefsHigh6] : j == 5 ? \[value coefsHigh7] : j == 6 ? \[value coefsHigh8] : j == 7 ? \[value coefsHigh9] : j == 8 ? \[value coefsHigh9] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr3 log10(r)
+   name segmented_spline_c9_fwd5
+   label cf
+   xpos -102
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  ColorMatrix {
+   matrix {
+       {0.5 -1 0.5}
+       {-1 1 0}
+       {0.5 0.5 0}
+     }
+   name ColorMatrix11
+   label "mult_f3_f33( cf, M)"
+   xpos -102
+   ypos 485
+  }
+push $N2ee41500
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_HIGH-1) * (logx-log10(midPoint.x))/(log10(maxPoint.x)-log10(midPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 t*t
+   expr1 t
+   expr2 1
+   name segmented_spline_c9_fwd8
+   label monomials
+   xpos 20
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  MergeExpression {
+   inputs 2
+   channel0 rgba
+   expr0 (Ar*Br)+(Ag*Bg)+(Ab*Bb)
+   name dot_f3_f10
+   label "logy = dot_f3_f3( monomials, mult_f3_f33( cf, M))"
+   xpos -102
+   ypos 571
+  }
+  Dot {
+   name Dot63
+   label logy
+   xpos -68
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle52
+   xpos -102
+   ypos 682
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply18
+   xpos -325
+   ypos 834
+  }
+push 0
+push $N2ee13880
+  Shuffle {
+   green red
+   blue red
+   alpha red
+   name Shuffle53
+   label bottom
+   xpos -830
+   ypos 622
+  }
+push $N2af1e000
+  Dot {
+   name Dot64
+   xpos -448
+   ypos 388
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 rgba
+   expr0 "logx * \[value slopeLow] + ( log10(\[value minPoint.y]) - \[value slopeLow] * log10(\[value minPoint.x]) )"
+   name segmented_spline_c9_fwd1
+   xpos -482
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  Dot {
+   name Dot65
+   label logy
+   xpos -448
+   ypos 657
+  }
+  Shuffle {
+   alpha white
+   name Shuffle54
+   xpos -482
+   ypos 675
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply19
+   xpos -563
+   ypos 838
+  }
+push $N2ee13880
+  Shuffle {
+   red green
+   blue green
+   alpha green
+   name Shuffle55
+   label low
+   xpos -746
+   ypos 619
+  }
+push $N2af1e000
+  Dot {
+   name Dot66
+   xpos -315
+   ypos 394
+  }
+set N2ee9f180 [stack 0]
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_LOW-1) * (logx-log10(minPoint.x))/(log10(midPoint.x)-log10(minPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "j == 0 ? \[value coefsLow0] : j == 1 ? \[value coefsLow1] : j == 2 ? \[value coefsLow2] :j == 3 ? \[value coefsLow3] : j == 4 ? \[value coefsLow4] : j == 5 ? \[value coefsLow5] : j == 6 ? \[value coefsLow6] : j == 7 ? \[value coefsLow7] : j == 8 ? \[value coefsLow8] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr1 "j == 0 ? \[value coefsLow1] : j == 1 ? \[value coefsLow2] : j == 2 ? \[value coefsLow3] :j == 3 ? \[value coefsLow4] : j == 4 ? \[value coefsLow5] : j == 5 ? \[value coefsLow6] : j == 6 ? \[value coefsLow7] : j == 7 ? \[value coefsLow8] : j == 8 ? \[value coefsLow9] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr2 "j == 0 ? \[value coefsLow2] : j == 1 ? \[value coefsLow3] : j == 2 ? \[value coefsLow4] :j == 3 ? \[value coefsLow5] : j == 4 ? \[value coefsLow6] : j == 5 ? \[value coefsLow7] : j == 6 ? \[value coefsLow8] : j == 7 ? \[value coefsLow9] : j == 8 ? \[value coefsLow9] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr3 j
+   name segmented_spline_c9_fwd2
+   label cf
+   xpos -349
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  ColorMatrix {
+   matrix {
+       {0.5 -1 0.5}
+       {-1 1 0}
+       {0.5 0.5 0}
+     }
+   name ColorMatrix12
+   label "mult_f3_f33( cf, M)"
+   xpos -349
+   ypos 484
+  }
+push $N2ee9f180
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_LOW-1) * (logx-log10(minPoint.x))/(log10(midPoint.x)-log10(minPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 t*t
+   expr1 t
+   expr2 1
+   name segmented_spline_c9_fwd3
+   label monomials
+   xpos -225
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  MergeExpression {
+   inputs 2
+   channel0 rgba
+   expr0 (Ar*Br)+(Ag*Bg)+(Ab*Bb)
+   name dot_f3_f11
+   label "logy = dot_f3_f3( monomials, mult_f3_f33( cf, M))"
+   xpos -349
+   ypos 571
+  }
+  Dot {
+   name Dot67
+   label logy
+   xpos -315
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle56
+   xpos -349
+   ypos 680
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply20
+   xpos -441
+   ypos 834
+  }
+  Merge2 {
+   inputs 4+1
+   operation plus
+   also_merge all
+   name Plus7
+   xpos -349
+   ypos 937
+  }
+  Expression {
+   channel0 rgba
+   expr0 pow(10,r)
+   name Expression8
+   xpos -349
+   ypos 999
+  }
+  Output {
+   name Output1
+   xpos -349
+   ypos 1099
+  }
+ end_group
+ Shuffle {
+  green black
+  blue black
+  alpha black
+  name Shuffle57
+  xpos 117
+  ypos 173
+ }
+ Dot {
+  name Dot68
+  label R
+  note_font_size 50
+  note_font_color 0xff0000ff
+  xpos 151
+  ypos 199
+ }
+push $N2ae0aa80
+ Dot {
+  name Dot69
+  label G
+  note_font_size 50
+  note_font_color 0x3ff00ff
+  xpos 303
+  ypos 96
+ }
+ Shuffle {
+  red green
+  blue green
+  name Shuffle58
+  xpos 269
+  ypos 135
+ }
+ Group {
+  name segmented_spline_c9_fwd1
+  tile_color 0x33ffb3ff
+  note_font "Bitstream Vera Sans Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold Bold"
+  note_font_color 0xffffffff
+  xpos 269
+  ypos 161
+  addUserKnob {20 User}
+  addUserKnob {7 coefsLow0}
+  coefsLow0 -1.698970004
+  addUserKnob {7 coefsLow1}
+  coefsLow1 -1.698970004
+  addUserKnob {7 coefsLow2}
+  coefsLow2 -1.4779
+  addUserKnob {7 coefsLow3}
+  coefsLow3 -1.2291
+  addUserKnob {7 coefsLow4}
+  coefsLow4 -0.8648
+  addUserKnob {7 coefsLow5}
+  coefsLow5 -0.448
+  addUserKnob {7 coefsLow6}
+  coefsLow6 0.00518
+  addUserKnob {7 coefsLow7}
+  coefsLow7 0.4511080334
+  addUserKnob {7 coefsLow8}
+  coefsLow8 0.9113744414
+  addUserKnob {7 coefsLow9}
+  coefsLow9 0.9113744414
+  addUserKnob {26 ""}
+  addUserKnob {7 coefsHigh0}
+  coefsHigh0 0.5154386965
+  addUserKnob {7 coefsHigh1}
+  coefsHigh1 0.8470437783
+  addUserKnob {7 coefsHigh2}
+  coefsHigh2 1.1358
+  addUserKnob {7 coefsHigh3}
+  coefsHigh3 1.3802
+  addUserKnob {7 coefsHigh4}
+  coefsHigh4 1.5197
+  addUserKnob {7 coefsHigh5}
+  coefsHigh5 1.5985
+  addUserKnob {7 coefsHigh6}
+  coefsHigh6 1.6467
+  addUserKnob {7 coefsHigh7}
+  coefsHigh7 1.674609136
+  addUserKnob {7 coefsHigh8}
+  coefsHigh8 1.687873339
+  addUserKnob {7 coefsHigh9}
+  coefsHigh9 1.687873339
+  addUserKnob {26 ""}
+  addUserKnob {12 minPoint}
+  minPoint {0.0028799 0.02}
+  addUserKnob {12 midPoint}
+  midPoint {4.79999924 4.8}
+  addUserKnob {12 maxPoint}
+  maxPoint {1005.719116 48}
+  addUserKnob {7 slopeLow}
+  addUserKnob {7 slopeHigh}
+  slopeHigh 0.04
+  addUserKnob {26 ""}
+  addUserKnob {26 ""}
+  addUserKnob {7 N_KNOTS_LOW}
+  N_KNOTS_LOW 8
+  addUserKnob {7 N_KNOTS_HIGH}
+  N_KNOTS_HIGH 8
+ }
+  Input {
+   inputs 0
+   name float
+   xpos -349
+   ypos 278
+  }
+  Shuffle {
+   green red
+   blue red
+   name Shuffle48
+   xpos -349
+   ypos 324
+  }
+  Dot {
+   name Dot58
+   xpos -315
+   ypos 350
+  }
+set N2ef04700 [stack 0]
+  Dot {
+   name Dot59
+   xpos -671
+   ypos 388
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "logx <= log10(minPoint.x)"
+   expr1 "( logx > log10(minPoint.x) ) * ( logx < log10( midPoint.x) )"
+   expr2 "( logx >= log10(midPoint.x) ) && ( logx < log10(maxPoint.x) )"
+   expr3 "logx >= log10(maxPoint.x)"
+   name segmented_spline_c9_fwd7
+   xpos -705
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+set N2ef04000 [stack 0]
+  Shuffle {
+   red alpha
+   green alpha
+   blue alpha
+   name Shuffle49
+   label peak
+   xpos -585
+   ypos 621
+  }
+push $N2ef04700
+  Dot {
+   name Dot60
+   xpos 235
+   ypos 389
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 rgba
+   expr0 "logx * slopeHigh+ ( log10(maxPoint.y) - slopeHigh * log10(maxPoint) )"
+   expr1 "logx * \[value slopeHigh] + ( log10(\[value maxPoint.y]) - \[value slopeHigh] * log10(\[value maxPoint]) )"
+   name segmented_spline_c9_fwd9
+   xpos 201
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  Dot {
+   name Dot61
+   label logy
+   xpos 235
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle50
+   xpos 201
+   ypos 680
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply17
+   xpos -191
+   ypos 836
+  }
+push $N2ef04000
+  Shuffle {
+   red blue
+   green blue
+   alpha blue
+   name Shuffle51
+   label high
+   xpos -666
+   ypos 622
+  }
+push $N2ef04700
+  Dot {
+   name Dot62
+   xpos -68
+   ypos 389
+  }
+set N2ef65c00 [stack 0]
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_HIGH-1) * (logx-log10(midPoint.x))/(log10(maxPoint.x)-log10(midPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "j == 0 ? \[value coefsHigh0] : j == 1 ? \[value coefsHigh1] : j == 2 ? \[value coefsHigh2] :j == 3 ? \[value coefsHigh3] : j == 4 ? \[value coefsHigh4] : j == 5 ? \[value coefsHigh5] : j == 6 ? \[value coefsHigh6] : j == 7 ? \[value coefsHigh7] : j == 8 ? \[value coefsHigh8] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr1 "j == 0 ? \[value coefsHigh1] : j == 1 ? \[value coefsHigh2] : j == 2 ? \[value coefsHigh3] :j == 3 ? \[value coefsHigh4] : j == 4 ? \[value coefsHigh5] : j == 5 ? \[value coefsHigh6] : j == 6 ? \[value coefsHigh7] : j == 7 ? \[value coefsHigh8] : j == 8 ? \[value coefsHigh9] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr2 "j == 0 ? \[value coefsHigh2] : j == 1 ? \[value coefsHigh3] : j == 2 ? \[value coefsHigh4] :j == 3 ? \[value coefsHigh5] : j == 4 ? \[value coefsHigh6] : j == 5 ? \[value coefsHigh7] : j == 6 ? \[value coefsHigh8] : j == 7 ? \[value coefsHigh9] : j == 8 ? \[value coefsHigh9] : j == 9 ? \[value coefsHigh9] : \[value coefsHigh9]"
+   expr3 log10(r)
+   name segmented_spline_c9_fwd5
+   label cf
+   xpos -102
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  ColorMatrix {
+   matrix {
+       {0.5 -1 0.5}
+       {-1 1 0}
+       {0.5 0.5 0}
+     }
+   name ColorMatrix11
+   label "mult_f3_f33( cf, M)"
+   xpos -102
+   ypos 485
+  }
+push $N2ef65c00
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_HIGH-1) * (logx-log10(midPoint.x))/(log10(maxPoint.x)-log10(midPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 t*t
+   expr1 t
+   expr2 1
+   name segmented_spline_c9_fwd8
+   label monomials
+   xpos 20
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  MergeExpression {
+   inputs 2
+   channel0 rgba
+   expr0 (Ar*Br)+(Ag*Bg)+(Ab*Bb)
+   name dot_f3_f10
+   label "logy = dot_f3_f3( monomials, mult_f3_f33( cf, M))"
+   xpos -102
+   ypos 571
+  }
+  Dot {
+   name Dot63
+   label logy
+   xpos -68
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle52
+   xpos -102
+   ypos 682
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply18
+   xpos -325
+   ypos 834
+  }
+push 0
+push $N2ef04000
+  Shuffle {
+   green red
+   blue red
+   alpha red
+   name Shuffle53
+   label bottom
+   xpos -830
+   ypos 622
+  }
+push $N2ef04700
+  Dot {
+   name Dot64
+   xpos -448
+   ypos 388
+  }
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   channel0 rgba
+   expr0 "logx * \[value slopeLow] + ( log10(\[value minPoint.y]) - \[value slopeLow] * log10(\[value minPoint.x]) )"
+   name segmented_spline_c9_fwd1
+   xpos -482
+   ypos 433
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  Dot {
+   name Dot65
+   label logy
+   xpos -448
+   ypos 657
+  }
+  Shuffle {
+   alpha white
+   name Shuffle54
+   xpos -482
+   ypos 675
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply19
+   xpos -563
+   ypos 838
+  }
+push $N2ef04000
+  Shuffle {
+   red green
+   blue green
+   alpha green
+   name Shuffle55
+   label low
+   xpos -746
+   ypos 619
+  }
+push $N2ef04700
+  Dot {
+   name Dot66
+   xpos -315
+   ypos 394
+  }
+set N2efc7880 [stack 0]
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_LOW-1) * (logx-log10(minPoint.x))/(log10(midPoint.x)-log10(minPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 "j == 0 ? \[value coefsLow0] : j == 1 ? \[value coefsLow1] : j == 2 ? \[value coefsLow2] :j == 3 ? \[value coefsLow3] : j == 4 ? \[value coefsLow4] : j == 5 ? \[value coefsLow5] : j == 6 ? \[value coefsLow6] : j == 7 ? \[value coefsLow7] : j == 8 ? \[value coefsLow8] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr1 "j == 0 ? \[value coefsLow1] : j == 1 ? \[value coefsLow2] : j == 2 ? \[value coefsLow3] :j == 3 ? \[value coefsLow4] : j == 4 ? \[value coefsLow5] : j == 5 ? \[value coefsLow6] : j == 6 ? \[value coefsLow7] : j == 7 ? \[value coefsLow8] : j == 8 ? \[value coefsLow9] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr2 "j == 0 ? \[value coefsLow2] : j == 1 ? \[value coefsLow3] : j == 2 ? \[value coefsLow4] :j == 3 ? \[value coefsLow5] : j == 4 ? \[value coefsLow6] : j == 5 ? \[value coefsLow7] : j == 6 ? \[value coefsLow8] : j == 7 ? \[value coefsLow9] : j == 8 ? \[value coefsLow9] : j == 9 ? \[value coefsLow9] : \[value coefsLow9]"
+   expr3 j
+   name segmented_spline_c9_fwd2
+   label cf
+   xpos -349
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  ColorMatrix {
+   matrix {
+       {0.5 -1 0.5}
+       {-1 1 0}
+       {0.5 0.5 0}
+     }
+   name ColorMatrix12
+   label "mult_f3_f33( cf, M)"
+   xpos -349
+   ypos 484
+  }
+push $N2efc7880
+  Expression {
+   temp_name0 logx
+   temp_expr0 "log10( max(r, 5.96046448e-08 ))"
+   temp_name1 knot_coord
+   temp_expr1 "(N_KNOTS_LOW-1) * (logx-log10(minPoint.x))/(log10(midPoint.x)-log10(minPoint.x))"
+   temp_name2 j
+   temp_expr2 int(knot_coord)
+   temp_name3 t
+   temp_expr3 "knot_coord - j"
+   channel0 {rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   expr0 t*t
+   expr1 t
+   expr2 1
+   name segmented_spline_c9_fwd3
+   label monomials
+   xpos -225
+   ypos 427
+   addUserKnob {20 User}
+   addUserKnob {7 coefsLow0}
+   coefsLow0 {{parent.coefsLow0}}
+   addUserKnob {7 coefsLow1}
+   coefsLow1 {{parent.coefsLow1}}
+   addUserKnob {7 coefsLow2}
+   coefsLow2 {{parent.coefsLow2}}
+   addUserKnob {7 coefsLow3}
+   coefsLow3 {{parent.coefsLow3}}
+   addUserKnob {7 coefsLow4}
+   coefsLow4 {{parent.coefsLow4}}
+   addUserKnob {7 coefsLow5}
+   coefsLow5 {{parent.coefsLow5}}
+   addUserKnob {7 coefsLow6}
+   coefsLow6 {{parent.coefsLow6}}
+   addUserKnob {7 coefsLow7}
+   coefsLow7 {{parent.coefsLow7}}
+   addUserKnob {7 coefsLow8}
+   coefsLow8 {{parent.coefsLow8}}
+   addUserKnob {7 coefsLow9}
+   coefsLow9 {{parent.coefsLow9}}
+   addUserKnob {26 ""}
+   addUserKnob {7 coefsHigh0}
+   coefsHigh0 {{parent.coefsHigh0}}
+   addUserKnob {7 coefsHigh1}
+   coefsHigh1 {{parent.coefsHigh1}}
+   addUserKnob {7 coefsHigh2}
+   coefsHigh2 {{parent.coefsHigh2}}
+   addUserKnob {7 coefsHigh3}
+   coefsHigh3 {{parent.coefsHigh3}}
+   addUserKnob {7 coefsHigh4}
+   coefsHigh4 {{parent.coefsHigh4}}
+   addUserKnob {7 coefsHigh5}
+   coefsHigh5 {{parent.coefsHigh5}}
+   addUserKnob {7 coefsHigh6}
+   coefsHigh6 {{parent.coefsHigh6}}
+   addUserKnob {7 coefsHigh7}
+   coefsHigh7 {{parent.coefsHigh7}}
+   addUserKnob {7 coefsHigh8}
+   coefsHigh8 {{parent.coefsHigh8}}
+   addUserKnob {7 coefsHigh9}
+   coefsHigh9 {{parent.coefsHigh9}}
+   addUserKnob {26 ""}
+   addUserKnob {12 minPoint}
+   minPoint {{parent.minPoint.x} {parent.minPoint.y}}
+   addUserKnob {12 midPoint}
+   midPoint {{parent.midPoint.x} {parent.midPoint.y}}
+   addUserKnob {12 maxPoint}
+   maxPoint {{parent.maxPoint.x} {parent.maxPoint.y}}
+   addUserKnob {7 slopeLow}
+   slopeLow {{parent.slopeLow}}
+   addUserKnob {7 slopeHigh}
+   slopeHigh {{parent.slopeHigh}}
+   addUserKnob {26 ""}
+   addUserKnob {26 ""}
+   addUserKnob {7 N_KNOTS_LOW}
+   N_KNOTS_LOW {{parent.N_KNOTS_LOW}}
+   addUserKnob {7 N_KNOTS_HIGH}
+   N_KNOTS_HIGH {{parent.N_KNOTS_HIGH}}
+  }
+  MergeExpression {
+   inputs 2
+   channel0 rgba
+   expr0 (Ar*Br)+(Ag*Bg)+(Ab*Bb)
+   name dot_f3_f11
+   label "logy = dot_f3_f3( monomials, mult_f3_f33( cf, M))"
+   xpos -349
+   ypos 571
+  }
+  Dot {
+   name Dot67
+   label logy
+   xpos -315
+   ypos 662
+  }
+  Shuffle {
+   alpha white
+   name Shuffle56
+   xpos -349
+   ypos 680
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   also_merge all
+   name Multiply20
+   xpos -441
+   ypos 834
+  }
+  Merge2 {
+   inputs 4+1
+   operation plus
+   also_merge all
+   name Plus7
+   xpos -349
+   ypos 937
+  }
+  Expression {
+   channel0 rgba
+   expr0 pow(10,r)
+   name Expression8
+   xpos -349
+   ypos 999
+  }
+  Output {
+   name Output1
+   xpos -349
+   ypos 1099
+  }
+ end_group
+ Shuffle {
+  red black
+  blue black
+  alpha black
+  name Shuffle61
+  xpos 269
+  ypos 185
+ }
+ Dot {
+  name Dot46
+  label G
+  note_font_size 50
+  note_font_color 0x3ff00ff
+  xpos 303
+  ypos 211
+ }
+ Merge2 {
+  inputs 3+1
+  operation plus
+  also_merge all
+  name Plus9
+  xpos 269
+  ypos 339
+ }
+ Dot {
+  name Dot93
+  label "line 90"
+  note_font_size 20
+  xpos 302
+  ypos 503
+ }
+ Expression {
+  temp_name0 CINEMA_BLACK
+  temp_expr0 pow(10,log10(0.02))
+  temp_name1 CINEMA_WHITE
+  temp_expr1 48
+  expr0 "(r - CINEMA_BLACK) / (CINEMA_WHITE - CINEMA_BLACK)"
+  expr1 "(g - CINEMA_BLACK) / (CINEMA_WHITE - CINEMA_BLACK)"
+  expr2 "(b - CINEMA_BLACK) / (CINEMA_WHITE - CINEMA_BLACK)"
+  name Expression11
+  label "  // Scale luminance to linear code value\n    float linearCV\[3];\n    linearCV\[0] = Y_2_linCV( rgbPost\[0], CINEMA_WHITE, CINEMA_BLACK);\n    linearCV\[1] = Y_2_linCV( rgbPost\[1], CINEMA_WHITE, CINEMA_BLACK);\n    linearCV\[2] = Y_2_linCV( rgbPost\[2], CINEMA_WHITE, CINEMA_BLACK);"
+  xpos 268
+  ypos 467
+ }
+ Expression {
+  temp_name0 SCALE
+  temp_expr0 0.955
+  temp_name1 MAX
+  temp_expr1 1
+  expr0 "min( r, MAX) *SCALE"
+  expr1 "min( g, MAX) *SCALE"
+  expr2 "min( b, MAX) *SCALE"
+  name Expression1
+  label "    // Scale and clamp white to avoid casted highlights due to D60 simulation\n    linearCV\[0] = min( linearCV\[0], 1.0) * SCALE;\n    linearCV\[1] = min( linearCV\[1], 1.0) * SCALE;\n    linearCV\[2] = min( linearCV\[2], 1.0) * SCALE;"
+  xpos 268
+  ypos 565
+ }
+ Dot {
+  name Dot4
+  label "linearCV\[3] IN"
+  note_font_size 20
+  xpos 302
+  ypos 729
+ }
+ ColorMatrix {
+  matrix {
+      {0.6624541811 0.1340042065 0.156187687}
+      {0.2722287168 0.6740817658 0.0536895174}
+      {-0.0055746495 0.0040607335 1.0103391}
+    }
+  name AP1_to_XYZ
+  xpos 268
+  ypos 943
+ }
+ Dot {
+  name XYZ_IN
+  label XYZ_IN
+  note_font_size 20
+  xpos 1060
+  ypos 947
+ }
+ Expression {
+  temp_name0 DIVISOR
+  temp_expr0 r+g+b
+  expr0 "DIVISOR==0 ? r/0.0000000001 : r/DIVISOR"
+  expr1 "DIVISOR==0 ? g/0.0000000001 : g/DIVISOR"
+  expr2 g
+  name DIVISOR
+  xpos 1026
+  ypos 1075
+ }
+ Expression {
+  expr0 r
+  expr1 g
+  expr2 "clamp(b, 0.0 ,999999999)"
+  name Expression2
+  label "clamp( xyY\[2], 0., HALF_POS_INF)"
+  xpos 268
+  ypos 1069
+ }
+ Expression {
+  temp_name0 DIM_SURROUND_GAMMA
+  temp_expr0 0.9811
+  expr0 r
+  expr1 g
+  expr2 "pow(b, DIM_SURROUND_GAMMA)"
+  name Expression3
+  label "xyY\[2] = pow( xyY\[2], DIM_SURROUND_GAMMA);"
+  xpos 268
+  ypos 1236
+ }
+ Dot {
+  name xyY_IN
+  label xyY_IN
+  note_font_size 20
+  xpos 1053
+  ypos 1246
+ }
+ Expression {
+  expr0 "r * b / max (g, 0.0000000001)"
+  expr1 b
+  expr2 "(1.0-r-g) *b / max(g,0.0000000001)"
+  name Expression4
+  xpos 1019
+  ypos 1297
+ }
+ ColorMatrix {
+  matrix {
+      {1.64102338 -0.3248032942 -0.2364246952}
+      {-0.6636628587 1.615331592 0.0167563477}
+      {0.0117218943 -0.008284442 0.9883948585}
+    }
+  name XYZ_2_AP1
+  xpos 269
+  ypos 1297
+ }
+ Dot {
+  name Dot5
+  label "calc_sat_adjust_matrix( ODT_SAT_FACTOR, AP1_RGB2Y);\n"
+  xpos 303
+  ypos 1554
+ }
+ ColorMatrix {
+  matrix {
+      {{"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_0] + \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]"} {"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_1]"} {"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_2]"}}
+      {{"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_0]"} {"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_1] + \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]"} {"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_2]"}}
+      {{"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_0]"} {"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_1]"} {"(1.0 - \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]) * \[value calc_sat_adjust_matrix.AP1_RGB2Y_2] + \[value calc_sat_adjust_matrix.ODT_SAT_FACTOR]"}}
+    }
+  name calc_sat_adjust_matrix
+  xpos 269
+  ypos 1580
+  addUserKnob {20 User}
+  addUserKnob {7 ODT_SAT_FACTOR}
+  ODT_SAT_FACTOR 0.93
+  addUserKnob {7 AP1_RGB2Y_0}
+  AP1_RGB2Y_0 0.13400421
+  addUserKnob {7 AP1_RGB2Y_1}
+  AP1_RGB2Y_1 0.67408177
+  addUserKnob {7 AP1_RGB2Y_2}
+  AP1_RGB2Y_2 0.00406073
+ }
+ ColorMatrix {
+  matrix {
+      {0.6624541811 0.1340042065 0.156187687}
+      {0.2722287168 0.6740817658 0.0536895174}
+      {-0.0055746495 0.00406073 1.0103391}
+    }
+  name AP1_2_XYZ
+  xpos 269
+  ypos 1624
+ }
+ ColorMatrix {
+  matrix {
+      {2.402741414 -0.8974841639 -0.38805337}
+      {-0.8325796487 1.769231754 0.0237127115}
+      {0.0388233815 -0.0824996856 1.0363686}
+    }
+  name ColorMatrix1
+  label "    // CIE XYZ to display primaries\n    linearCV = mult_f3_f44( XYZ, XYZ_2_DISPLAY_PRI_MAT);"
+  xpos 269
+  ypos 1650
+ }
+ Clamp {
+  name Clamp2
+  xpos 269
+  ypos 1715
+ }
+ Expression {
+  temp_name0 DISPGAMMA
+  temp_expr0 2.4
+  temp_name1 OFFSET
+  temp_expr1 .055
+  temp_name2 yb
+  temp_expr2 "pow( OFFSET * DISPGAMMA / ( ( DISPGAMMA - 1.0) * ( 1.0 + OFFSET)), DISPGAMMA)"
+  temp_name3 rs
+  temp_expr3 "pow( ( DISPGAMMA - 1.0) / OFFSET, DISPGAMMA - 1.0) * pow( ( 1.0 + OFFSET) / DISPGAMMA, DISPGAMMA)"
+  expr0 "r>=yb ? ( 1.0 + OFFSET) * pow( r, 1.0 / DISPGAMMA) - OFFSET : r * rs"
+  expr1 "g>=yb ? ( 1.0 + OFFSET) * pow( g, 1.0 / DISPGAMMA) - OFFSET : g * rs"
+  expr2 "b>=yb ? ( 1.0 + OFFSET) * pow( b, 1.0 / DISPGAMMA) - OFFSET : b * rs"
+  name moncurve_r
+  label "with gamma of 2.4 and offset of 0.055 matches the EOTF found in IEC 61966-2-1:1999 (sRGB)"
+  xpos 269
+  ypos 1768
+ }
+push $N2ae0b180
+ Dot {
+  name Dot2
+  xpos -97
+  ypos -155
+ }
+ Dot {
+  name Dot1
+  xpos -97
+  ypos 2147
+ }
+ Copy {
+  inputs 2
+  from0 -rgba.alpha
+  to0 -rgba.alpha
+  channels rgb
+  name Copy1
+  xpos 268
+  ypos 2173
+ }
+ Dot {
+  name Dot3
+  label Display
+  note_font_size 160
+  note_font_color 0xff06c8ff
+  xpos 302
+  ypos 2288
+ }
+ Output {
+  name Output1
+  xpos 268
+  ypos 2357
+ }
+end_group
